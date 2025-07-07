@@ -1,501 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>My Notes!</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
+        body {
             font-family: 'Times New Roman', Times, serif;
-            box-sizing: border-box;
+            padding: 20px;
+            background-color: rgb(145, 87, 145);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        .notes {
+            max-width: 900px;
+            margin: auto;
+            padding-top: 35px;
+        }
+        p {
+            text-align: center;
+            font-size: 50px;
+            font-weight: bold;
+        } 
+        button {
+            padding: 0.4rem 1rem;
+            margin: 0.5rem 0.3rem;
+            border: none;
+            border-radius: 4px;
+            background-color: #c7258c;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #47063d;
+        }
+        .note {
+            background-color: var(--note-bg);
+            border: 1px solid var(--note-border);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+        textarea {
+            width: 100%;
+            height: 50px;
+            border: none;
+            resize: none;
+            font-size: 1rem;
+            background: transparent;
+            color: inherit;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+        .actions button {
+            background-color: #c55dbe;
+        }
+        .actions button:hover {
+            background-color: #691b64;
+        }
+        #mode {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            border-radius: 50px;
+        }
+        #addNote {
+            position: absolute;
+            top: 175px;
+            left: 15%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            font-size: 1rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+        }
+        #isinote{
+            margin-top: 80px;
         }
         
-        /* welcome page style */
-        .welcome-container {  
-            width: 100%;
-            min-height: 100vh;
-            background: linear-gradient(rgb(87, 87, 184), pink);
-            color: blanchedalmond;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: fixed;
-            top: 0;
-            left: 0;
-            transition: opacity 0.5s ease;
-            z-index: 1000;
-        } 
-        .welcome-content {
-            text-align: center;
-            padding: 20px;
+        /* Light mode colors */
+        :root {
+            --bg-color: #ae64a9;
+            --text-color: #161515;
+            --note-bg: #ffffff;
+            --note-border: #ccc;
         }
-        .start-btn {
-            background: linear-gradient(rgb(11, 72, 83), rgb(236, 157, 170));
-            color: blanchedalmond;
-            font-size: 18px;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 40px;
-            margin-top: 30px;
-            cursor: pointer;
-        }
-
-        /* Notes Isi Style */
-        .container {
-            width: 100%;
-            min-height: 100vh;
-            background: linear-gradient(rgb(87, 87, 184), pink);
-            color: blanchedalmond;
-            padding: 4% 0 0 4%;
-        }
-        .container h1 {
-            display: flex;
-            align-items: center;
-            font-size: 35px;
-            font-weight: 600;
-        }
-        .container h1 img {
-            width: 60px;
-        }
-        .container button {
-            display: flex;
-            align-items: center;
-            background: linear-gradient(rgb(11, 72, 83), rgb(236, 157, 170));
-            color: blanchedalmond;
-            font-size: 16px;
-            border: none;
-            border-radius: 40px;
-            padding: 15px 25px;
-            margin: 30px 0 20px;
-            cursor: pointer;
-        }
-        .container button img {
-            width: 40px;
-            margin-right: 8px;
-        }
-        .notes-flex {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: flex-start;
-            align-items: flex-start;
-            margin-right: 10%;
-        }
-        .input-box {
-            position: relative;
-            flex-direction: column;
-            width: 500px;
-            min-height: 180px;
-            background: white;
-            color: rgb(168, 139, 96);
-            padding: 20px;
-            margin: 20px px;
-            border-radius: 5px;
-            flex: 0 1 auto;
-        }
-        .note-title {
-            font-weight: bold;
-            font-size: 18px;
-            margin-bottom: 10px;
-            padding: 5px;
-            border-bottom: 1px solid rgba(102, 93, 74, 0.3);
-            outline: none;
-        }
-        .note-title, .content{
-            position: relative;
-            padding: 5px;
-            line-height: 1.5;
-            outline: none;
-        }
-        .note-title[placeholder]:empty:before,
-        .content[placeholder]:empty::before {
-            content: attr(placeholder);
-            color: #665d4a;
-            opacity: 0.6;
-            position: absolute;
-            left: 10px;
-            top: 10px;
-            pointer-events: none;
-        }
-        .content {
-            min-height: 100px;
-            outline: none;
-            margin-top: 5px;
-        }
-        .input-box img {
-            width: 18px;
-            position: absolute;
-            bottom: 15px;
-            left: 15px;
-            cursor: pointer;
-        }
-       .timestamp {  /* Last Edit Style */
-            font-size: 12px; 
-            color: #665d4a;
-            margin-top: 10px;
-        }
-        .button-group {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        .editBtn, .saveBtn {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            background-color: #665d4a;
-            color: blanchedalmond;
-        }
-
-        /* Search Bar Styles */
-        #searchBar {
-            width: 100%;
-            max-width: 400px;
-            padding: 10px 15px;
-            margin-bottom: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 25px;
-            background: rgba(255, 255, 255, 0.1);
-            color: blanchedalmond;
-            font-size: 16px;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-    
-        #searchBar::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        /* animasi style */
-        .input-box {
-            animation: fadeInNote 0.5s ease;
-        }
-        @keyframes fadeInNote {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        .btn:hover, .start-btn:hover {
-            transform: scale(1.05);
-            transition: transform 0.3s ease;
-        }
-
-        /* tombol si Dark/Light Mode */
-        .toggle-wrapper {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            z-index: 1001;
-        }     
-        .toggle-wrapper input {
-            display: none;
-        }     
-        .toggle-label {
-            background: #ccc;
-            display: inline-block;
-            width: 50px;
-            height: 26px;
-            border-radius: 20px;
-            position: relative;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }     
-        .toggle-label::after {
-            content: "";
-            width: 22px;
-            height: 22px;
-            background: white;
-            border-radius: 50%;
-            position: absolute;
-            left: 2px;
-            top: 2px;
-            transition: transform 0.3s ease; /* geser on/offnya */
-        }   
-        #modeToggle:checked + .toggle-label {
-            background: #666;
-        }  
-        #modeToggle:checked + .toggle-label::after {
-            transform: translateX(24px);
-        }  
-        body, .welcome-container, .container, .input-box {
-            transition: background 0.4s ease, color 0.4s ease;
-        }
-        /* Dark Mode Styles */
+        /* Dark mode override */
         .dark-mode {
-            background: #1e1e2f;
-            color: blanchedalmond;
-        }
-        .dark-mode .welcome-container, 
-        .dark-mode .container {
-            background: linear-gradient(#2e2e48, #533757);
-        }
-        .dark-mode .input-box {
-            background: #2b2b3d;
-            color: #dfd3b7;
-        }
-        .dark-mode #searchBar {
-            background: rgba(43, 43, 61, 0.7);
-            border-color: rgba(223, 211, 183, 0.3);
-            color: #dfd3b7;
-        }
-        .dark-mode #searchBar::placeholder {
-            color: rgba(223, 211, 183, 0.5);
-        }
-        .dark-mode .note-title,
-        .dark-mode .content {
-            border-color: rgba(223, 211, 183, 0.3);
-        }
-        .dark-mode .note-title [placeholder]:empty:before, .dark-mode .content[placeholder]:empty:before{
-            color: rgba(223, 211, 183, 0.6); /* Dark mode placeholder color */
+            --bg-color: #290129;
+            --text-color: #eee;
+            --note-bg: #2a2c37;
+            --note-border: #555;
         }
     </style>
 </head>
-
 <body>
-    <div class="welcome-container" id="welcomePage">
-        <div class="welcome-content">
-            <h1>🌝 LunariaNote 🌝</h1>
-            <p>Tuliskan Kisahmu, Rencanakan Mimpi Besarmu. Semua akan Bersinar Indah di antara Catatan Lunaria</p>
-            <button class="start-btn" id="startBtn">Mulai Sekarang</button>
-        </div>
+    <div class="notes">
+        <p>IPEH'S NOTES💫</p>
+        <div id="isinote"></div>
     </div>
-    <div class="container">
-        <h1><img src="Images/G6.png" />LunariaNotes💫 </h1>
-        <input type="text" id="searchBar" placeholder="Search notes by title or content..." />
-        <button class="btn"><img src="Images/G7.png" />Create Notes</button>
-        <div class="notes-container notes-flex"></div>
-    </div>
-    <div class="toggle-wrapper">
-        <input type="checkbox" id="modeToggle"/>
-        <label class="toggle-label" for="modeToggle"></label>
+    <div class="note-controls">
+        <button id="mode">🌙 Dark Mode</button>
+        <button id="addNote">Create Note</button>
     </div>
 
     <script>
-        const notesContainer = document.querySelector(".notes-container"); //mengambil elemen html untuk semua catatan yang akan ditampilkan dgn class notes-container
-        const createBtn = document.querySelector(".btn"); //mengambil elemen html untuk tombol dengan class "button" 
-        const searchBar = document.getElementById("searchBar"); //mengambil input pencarian berdasarkan ID 'SearchBar'
+        const addNoteBtn = document.getElementById("addNote");
+        const toggleBtn = document.getElementById("mode");
+        const isinote = document.getElementById("isinote");
 
-        function showNotes() {
-            notesContainer.innerHTML = localStorage.getItem("notes") || ""; //untuk ambil cttn di local storage dan menampilkan di halaman, jadi kali di refressh no no hilang
-            document.querySelectorAll('.input-box').forEach(note => {
-                //loop catatan yang ada , and mengaktifkan fitur save & edit
-                const editableContent = note.querySelector('.content');
-                const editableTitle = note.querySelector('.note-title');
-                const timestamp = note.querySelector('.timestamp');
-                const saveBtn = note.querySelector('.saveBtn');
-                const editBtn = note.querySelector('.editBtn');
-                
-                setupTypingEvent(editableContent, timestamp); //event update timestamp waktu pengguna selesai mengetik.
-                setupTitleEvent(editableTitle, timestamp);
-                
-                if (saveBtn) {
-                    saveBtn.addEventListener("click", () => saveNote(note));
-                }
-                
-                if (editBtn) { 
-                    editBtn.addEventListener("click", () => { //waktu user klik tombol edit, maka akan di stel ke true jadi bisa langsung di edit gitcu
-                        editableContent.contentEditable = "true";
-                        editableTitle.contentEditable = "true";
-                        editableContent.focus();
-                    });
-                }
-            });
-        }
-        showNotes();
-
-        function updateStorage() {
-            localStorage.setItem("notes", notesContainer.innerHTML); //mengupdate penyimpanan apabila catatan mengalami perubahan/persistensi data
-        }
-
-        function getCurrentTime() { //untuk Last edit 
-            const now = new Date();
-            return `Last edited: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`; 
-        }
-
-        function setupTypingEvent(editable, timestamp) {
-            editable.addEventListener("input", () => {
-                clearTimeout(editable.typingTimer); //setiap ada editan baru waktunya akan diubah
-                editable.typingTimer = setTimeout(() => { //setTimeout untuk pasang auto logic 
-                    timestamp.innerText = getCurrentTime();
-                    timestamp.style.display = "block";
-                    updateStorage();
-                }, 30000);
-            });
-        }
-        
-        function setupTitleEvent(title, timestamp) { //lebih ke aturan last edit judul
-            title.addEventListener("input", () => {
-                clearTimeout(title.typingTimer);
-                title.typingTimer = setTimeout(() => {
-                    timestamp.innerText = getCurrentTime();
-                    timestamp.style.display = "block";
-                    updateStorage();
-                }, 30000);
-            });
-        }
-        
-        //mengecek apakah notes kosong atau tidak, kalok tidak simpan, kalok kosong muncul pop up
-        function saveNote(note) { 
-            const title = note.querySelector('.note-title');
-            const content = note.querySelector('.content');
-            const timestamp = note.querySelector('.timestamp');
-            
-            if (title.innerText.trim() === "") {
-                alert("Judul catatan tidak boleh kosong yaa! 😊");
-                title.focus();
-                return;
-            }
-            
-            if (content.innerText.trim() === "") {
-                alert("Isi catatan tidak boleh kosong! 😠");
-                content.focus();
-                return;
-            }
-            
-            title.contentEditable = "false";
-            content.contentEditable = "false";
-            timestamp.innerText = getCurrentTime();
-            updateStorage();
-        }
-
-        //membuat catatan baru(create notes)
-        createBtn.addEventListener("click", () => { 
-            const wrapper = document.createElement("div");
-            wrapper.className = "input-box";
-
-            const title = document.createElement("div");
-            title.className = "note-title";
-            title.contentEditable = "true";
-            title.innerText ="";
-            title.setAttribute("placeholder", "Untitled Note");
-
-            const editableContent = document.createElement("div");
-            editableContent.className = "content";
-            editableContent.contentEditable = "true";
-            editableContent.innerText ="";
-            editableContent.setAttribute("placeholder", "Type your note here..")
-
-            // Tambahkan fungsi untuk menampilkan placeholder
-            function updatePlaceholder(element) {
-                if (element.innerText.trim() === "") { //mengecek apakah isi teks dalam elemen kosong
-                    element.classList.add("placeholder");
-                } else {
-                    element.classList.remove("placeholder"); //jika tidak maka placeholder akan dihapus
-                }
-            }
-
-            // Panggil fungsi ini saat membuat catatan baru
-            updatePlaceholder(title);
-            updatePlaceholder(editableContent);
-
-            // Tambahkan event listener untuk memeriksa perubahan
-            title.addEventListener("input", () => updatePlaceholder(title));
-            editableContent.addEventListener("input", () => updatePlaceholder(editableContent));
-
-            const img = document.createElement("img");
-            img.src = "Images/G4.png"; //delete pict
-
-            const timeInfo = document.createElement("div");
-            timeInfo.className = "timestamp";
-            timeInfo.style.display = "block";
-
-            const buttonGroup = document.createElement("div");
-            buttonGroup.className = "button-group";
-
-            const editBtn = document.createElement("button"); //tombol edit
-            editBtn.className = "editBtn";
-            editBtn.innerText = "Edit";
-
-            const saveBtn = document.createElement("button"); //tombol save
-            saveBtn.className = "saveBtn";
-            saveBtn.innerText = "Save";
-
-            saveBtn.addEventListener("click", () => saveNote(wrapper));
-            
-            editBtn.addEventListener("click", () => {
-                title.contentEditable = "true";
-                editableContent.contentEditable = "true";
-                editableContent.focus();
-            });
-
-            buttonGroup.appendChild(editBtn);
-            buttonGroup.appendChild(saveBtn);
-
-            wrapper.appendChild(title);
-            wrapper.appendChild(editableContent);
-            wrapper.appendChild(img);
-            wrapper.appendChild(timeInfo);
-            wrapper.appendChild(buttonGroup);
-
-            notesContainer.appendChild(wrapper);
-            
-            setupTypingEvent(editableContent, timeInfo);
-            setupTitleEvent(title, timeInfo);
-            
-            title.focus();
-            
-            const range = document.createRange();
-            range.selectNodeContents(title);
-            const sel = window.getSelection();
-            sel.removeAllRanges();
-            sel.addRange(range);
-        });
-
-        //menghapus catatan waktu user klik icon sampah
-        notesContainer.addEventListener("click", function(e) { 
-            if (e.target.tagName === "IMG") {
-                const confirmed = confirm("Kamu yakin mau hapus catatan ini? 😟");
-                if (confirmed) {
-                    e.target.parentElement.remove();
-                    updateStorage();
-                }
-            }
-        });
-        
-        // Search bar 
-        searchBar.addEventListener("input", () => {
-            const searchTerm = searchBar.value.toLowerCase();
-            const notes = notesContainer.querySelectorAll(".input-box");
-            
-            notes.forEach(note => {
-                const titleText = note.querySelector(".note-title").innerText.toLowerCase();
-                const contentText = note.querySelector(".content").innerText.toLowerCase();
-                
-                if (titleText.includes(searchTerm) || contentText.includes(searchTerm)) {
-                    note.style.display = "block";
-                } else {
-                    note.style.display = "none";
-                }
-            });
-        });
-
-        //welcome page 
-        const welcomePage = document.getElementById('welcomePage');
-        const startBtn = document.getElementById('startBtn');
-
-        startBtn.addEventListener('click', () => {
-            welcomePage.style.opacity = '0';
-            setTimeout(() => {
-                welcomePage.style.display = 'none';
-            }, 500);
-        });
-
-        // Dark/Light Mode
-        const modeToggle = document.getElementById("modeToggle");
-        if(localStorage.getItem("theme") === "dark") {
-            document.body.classList.add("dark-mode");
-            modeToggle.checked = true;
-        }
-  
-        modeToggle.addEventListener("change", () => {
+        toggleBtn.addEventListener("click", function(){
             document.body.classList.toggle("dark-mode");
-            localStorage.setItem("theme", document.body.classList.contains("dark-mode") ? "dark" : "light");
+            if (document.body.classList.contains("dark-mode")) {
+                toggleBtn.textContent = "☀️ Light Mode";
+            } else {
+                toggleBtn.textContent = "🌙 Dark Mode";
+            }
         });
 
+        function createNoteElement(noteContent = "", savedKey = null) {
+            const note = document.createElement("div");
+            note.className = "note";
+
+            const key = savedKey || `note-${Date.now()}`;
+            note.dataset.key = key;
+            note.innerHTML = `
+                <textarea readonly>${noteContent}</textarea>
+                <div class="actions">
+                    <button class="edit">Edit</button>
+                    <button class="save">Simpan</button>
+                    <button class="delete">Hapus</button>
+                </div>
+            `;
+            isinote.appendChild(note);
+
+            const textarea = note.querySelector("textarea");
+            const editBtn = note.querySelector(".edit");
+            const saveBtn = note.querySelector(".save");
+            const deleteBtn = note.querySelector(".delete");
+
+            editBtn.addEventListener("click", () => {
+                textarea.readOnly = false;
+                textarea.focus();
+            });
+            saveBtn.addEventListener("click", () => {
+                textarea.readOnly = true;
+                localStorage.setItem(note.dataset.key, textarea.value);
+            });
+            deleteBtn.addEventListener("click", () => {
+                localStorage.removeItem(note.dataset.key);
+                note.remove();
+            });
+        }
+
+        addNoteBtn.addEventListener("click", () => {
+            createNoteElement("");
+        });
+
+        Object.keys(localStorage).forEach(key => {
+            if (key.startsWith('note-')) {
+                createNoteElement(localStorage.getItem(key), key);
+            }
+        });
     </script>
 </body>
 </html>
